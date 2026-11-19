@@ -183,12 +183,12 @@ def create_staging_store(conn, cursor):
 def create_staging_address(conn, cursor):
     query = """
     CREATE TABLE staging.stg_address (
-    address_id INTEGER,
-    address VARCHAR(50),
-    batch_id VARCHAR(30),
-    extract_time TIMESTAMP
-);
-"""
+        address_id INTEGER,
+        address VARCHAR(50),
+        batch_id VARCHAR(30),
+        extract_time TIMESTAMP
+    );
+    """
     cursor.execute(query)
     conn.commit()
 
@@ -213,7 +213,7 @@ def extract_table_customer(conn_pagila, cursor_pagila):
 
 def extract_table_film(conn_pagila, cursor_pagila):
     query = """
-        SELECT
+    SELECT
         film_id,
         title,
         rental_rate,
@@ -228,7 +228,7 @@ def extract_table_film(conn_pagila, cursor_pagila):
 
 def extract_table_payment(conn_pagila, cursor_pagila):
     query = """
-        SELECT
+    SELECT
         payment_id,
         customer_id,
         rental_id,
@@ -245,7 +245,7 @@ def extract_table_payment(conn_pagila, cursor_pagila):
 
 def extract_table_rental(conn_pagila, cursor_pagila):
     query = """
-        SELECT
+    SELECT
         rental_id,
         inventory_id,
         %s,
@@ -259,7 +259,7 @@ def extract_table_rental(conn_pagila, cursor_pagila):
 
 def extract_table_inventory(conn_pagila, cursor_pagila):
     query = """
-        SELECT
+    SELECT
         inventory_id,
         film_id,
         store_id,
@@ -275,7 +275,7 @@ def extract_table_inventory(conn_pagila, cursor_pagila):
 
 def extract_table_store(conn_pagila, cursor_pagila):
     query = """
-        SELECT
+    SELECT
         store_id,
         address_id,
         %s,
@@ -289,7 +289,7 @@ def extract_table_store(conn_pagila, cursor_pagila):
 
 def extract_table_address(conn_pagila, cursor_pagila):
     query = """
-        SELECT
+    SELECT
         address_id,
         address,
         %s,
@@ -517,11 +517,11 @@ def transform_load_store(conn_po, cursor_po):
         address_id
     )
     SELECT
-    s.store_id,
-    TRIM(a.address)
+        s.store_id,
+        TRIM(a.address)
     FROM staging.stg_store s
     JOIN staging.stg_address a
-    ON s.address_id = a.address_id;
+        ON s.address_id = a.address_id;
     """
     cursor_po.execute(query)
     conn_po.commit()
@@ -532,13 +532,13 @@ def transform_load_date(conn_po, cursor_po):
     conn_po.commit()
         
     query = """
-    INSERT INTO dw.dim_date (
-    date_key,
-    full_date,
-    day,
-    month,
-    quarter,
-    year
+        INSERT INTO dw.dim_date (
+        date_key,
+        full_date,
+        day,
+        month,
+        quarter,
+        year
     )
     SELECT DISTINCT
         TO_CHAR(payment_date, 'YYYYMMDD')::INTEGER,
@@ -570,25 +570,25 @@ def transform_load_payment(conn_po, cursor_po):
         revenue_amount
     )
     SELECT
-    p.payment_id,
-    d.date_key,
-    c.customer_key,
-    f.film_key,
-    s.store_key,
-    p.amount
-FROM staging.stg_payment p
-JOIN staging.stg_rental r
-    ON p.rental_id = r.rental_id
-JOIN staging.stg_inventory i
-    ON r.inventory_id = i.inventory_id
-JOIN dw.dim_date d
-    ON p.payment_date::DATE = d.full_date
-JOIN dw.dim_customer c
-    ON p.customer_id = c.customer_id
-JOIN dw.dim_film f
-    ON i.film_id = f.film_id
-JOIN dw.dim_store s
-    ON i.store_id = s.store_id;
+        p.payment_id,
+        d.date_key,
+        c.customer_key,
+        f.film_key,
+        s.store_key,
+        p.amount
+    FROM staging.stg_payment p
+    JOIN staging.stg_rental r
+        ON p.rental_id = r.rental_id
+    JOIN staging.stg_inventory i
+        ON r.inventory_id = i.inventory_id
+    JOIN dw.dim_date d
+        ON p.payment_date::DATE = d.full_date
+    JOIN dw.dim_customer c
+        ON p.customer_id = c.customer_id
+    JOIN dw.dim_film f
+        ON i.film_id = f.film_id
+    JOIN dw.dim_store s
+        ON i.store_id = s.store_id;
     """
     
     cursor_po.execute(query)
