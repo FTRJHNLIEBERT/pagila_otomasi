@@ -563,32 +563,32 @@ def transform_load_payment(conn_po, cursor_po):
     
     query = """
         INSERT INTO dw.fact_payment (
-        payment_id,
-        customer_key,
-        film_key,
-        store_key,
-        revenue_amount
-    )
-    SELECT
-    p.payment_id,
-    d.date_key,
-    c.customer_key,
-    f.film_key,
-    s.store_key,
-    p.amount
-FROM staging.stg_payment p
-JOIN staging.stg_rental r
-    ON p.rental_id = r.rental_id
-JOIN staging.stg_inventory i
-    ON r.inventory_id = i.inventory_id
-JOIN dw.dim_date d
-    ON p.payment_date::DATE = d.full_date
-JOIN dw.dim_customer c
-    ON p.customer_id = c.customer_id
-JOIN dw.dim_film f
-    ON i.film_id = f.film_id
-JOIN dw.dim_store s
-    ON i.store_id = s.store_id;
+                payment_id,
+                customer_key,
+                film_key,
+                store_key,
+                revenue_amount
+            )
+            SELECT
+            p.payment_id,
+            d.date_key,
+            c.customer_key,
+            f.film_key,
+            s.store_key,
+            p.amount
+        FROM staging.stg_payment p
+        JOIN staging.stg_rental r
+            ON p.rental_id = r.rental_id
+        JOIN staging.stg_inventory i
+            ON r.inventory_id = i.inventory_id
+        JOIN dw.dim_date d
+            ON p.payment_date::DATE = d.full_date
+        JOIN dw.dim_customer c
+            ON p.customer_id = c.customer_id
+        JOIN dw.dim_film f
+            ON i.film_id = f.film_id
+        JOIN dw.dim_store s
+            ON i.store_id = s.store_id;
     """
     
     cursor_po.execute(query)
