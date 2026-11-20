@@ -3,9 +3,30 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 def main():
+    # Task create:
+    # 1. Pastikan database pagila dari pertemuan minggu sebelumnya sudah ada
+    # 2. Buatlah database baru dengan nama pagila_otomasi
+    # 3. Buatlah skema staging dan dw
+    # 4. Lengkapi setiap fungsi dibawah. Contohnya ada di create_staging_customer
     create() 
+    
+    # Task extract:
+    # 1a. Dalam setiap fungsi extract terdapat query check untuk memeriksa apakah data sudah ada.
+    # 1b. Lihat bahwa disana terdapat query filter 'WHERE'. Sementara value nya static dengan isi 'B001'
+    # 2a. cursor.rowcount digunakan untuk memeriksa jumlah query yang ter eksekusi. Cek nilainya dengan 0
+    # 2b. Apabila memang kosong, lakukan perulangan dengan membaca 'data_<nama_tabel>'. Lihat disana ada kode for ... in ... :
+    # 2c. Lakukan proses insert
+    # 3. Lengkapi setiap fungsi dibawah. Ganti 'pass' dengan kode yang seharusnya
     extract()
+    
+    # Task transform & load:
+    # 1a. Pada bagian transform load adalah proses transformasi dan loading ke skema dw
+    # 1b. Lihat pada 'Latihan ETL Pagila.sql' terdapat query 'INSERT ... SELECT ...'
+    # 2. Lengkapi setiap fungsi dibawah. Ganti 'pass' dengan kode yang seharusnya
     transform_load()   
+    
+    # NOTE: INGAT YA JANGAN PAKAI AI APAPUN. BIASAKAN KETIK SENDIRI SUPAYA HAFAL DAN BELAJAR DENGAN BAIK.
+    # CARA BELAJAR YANG BAIK ADALAH DENGAN MENCOBA. GOOD LUCK!
 
 # ======================= connection =======================
 
@@ -116,82 +137,22 @@ def create_staging_customer(conn, cursor):
     conn.commit()
 
 def create_staging_film(conn, cursor):
-    query = """
-    CREATE TABLE IF NOT EXISTS staging.stg_film (
-            film_id INTEGER,
-            title VARCHAR(255),
-            rental_rate NUMERIC(4,2),
-            batch_id VARCHAR(30),
-            extract_time TIMESTAMP
-        )
-    """
-    cursor.execute(query)
-    conn.commit()
+    pass
     
 def create_staging_payment(conn, cursor):
-    query = """
-    CREATE TABLE IF NOT EXISTS staging.stg_payment (
-        payment_id INTEGER,
-        customer_id INTEGER,
-        rental_id INTEGER,
-        amount NUMERIC(5,2),
-        payment_date TIMESTAMP,
-        batch_id VARCHAR(30),
-        extract_time TIMESTAMP
-    );
-    """
-    cursor.execute(query)
-    conn.commit()
+    pass
     
 def create_staging_rental(conn, cursor):
-    query = """
-    CREATE TABLE IF NOT EXISTS staging.stg_rental (
-        rental_id INTEGER,
-        inventory_id INTEGER,
-        batch_id VARCHAR(30),
-        extract_time TIMESTAMP
-    );
-    """
-    cursor.execute(query)
-    conn.commit()
+    pass
     
 def create_staging_inventory(conn, cursor):
-    query = """
-    CREATE TABLE IF NOT EXISTS staging.stg_inventory (
-        inventory_id INTEGER,
-        film_id INTEGER,
-        store_id INTEGER,
-        batch_id VARCHAR(30),
-        extract_time TIMESTAMP
-    );
-    """
-    cursor.execute(query)
-    conn.commit()
+    pass
     
 def create_staging_store(conn, cursor):
-    query = """
-    CREATE TABLE IF NOT EXISTS staging.stg_store (
-        store_id INTEGER,
-        address_id INTEGER,
-        batch_id VARCHAR(30),
-        extract_time TIMESTAMP
-    );
-    """
-    cursor.execute(query)
-    conn.commit()
+    pass
     
 def create_staging_address(conn, cursor):
-    query = """
-    CREATE TABLE staging.stg_address (
-        address_id INTEGER,
-        address VARCHAR(50),
-        batch_id VARCHAR(30),
-        extract_time TIMESTAMP
-    );
-    """
-    cursor.execute(query)
-    conn.commit()
-
+    pass
     
 # ======================= extract table staging =======================
     
@@ -212,96 +173,22 @@ def extract_table_customer(conn_pagila, cursor_pagila):
     return cursor_pagila.fetchall()
 
 def extract_table_film(conn_pagila, cursor_pagila):
-    query = """
-    SELECT
-        film_id,
-        title,
-        rental_rate,
-        %s,
-        CURRENT_TIMESTAMP
-    FROM public.film"""
-        
-    cursor_pagila.execute(query, ('B001',))
-    conn_pagila.commit()
-        
-    return cursor_pagila.fetchall()
+    pass
 
 def extract_table_payment(conn_pagila, cursor_pagila):
-    query = """
-    SELECT
-        payment_id,
-        customer_id,
-        rental_id,
-        amount,
-        payment_date,
-        %s,
-        CURRENT_TIMESTAMP
-    FROM public.payment"""
-        
-    cursor_pagila.execute(query, ('B001',))
-    conn_pagila.commit()
-        
-    return cursor_pagila.fetchall()
+    pass
 
 def extract_table_rental(conn_pagila, cursor_pagila):
-    query = """
-    SELECT
-        rental_id,
-        inventory_id,
-        %s,
-        CURRENT_TIMESTAMP
-    FROM public.rental"""
-        
-    cursor_pagila.execute(query, ('B001',))
-    conn_pagila.commit()
-        
-    return cursor_pagila.fetchall()
+    pass
 
 def extract_table_inventory(conn_pagila, cursor_pagila):
-    query = """
-    SELECT
-        inventory_id,
-        film_id,
-        store_id,
-        %s,
-        CURRENT_TIMESTAMP
-    FROM public.inventory"""
-        
-    cursor_pagila.execute(query, ('B001',))
-    conn_pagila.commit()
-        
-    return cursor_pagila.fetchall()
-
+    pass
 
 def extract_table_store(conn_pagila, cursor_pagila):
-    query = """
-    SELECT
-        store_id,
-        address_id,
-        %s,
-        CURRENT_TIMESTAMP
-    FROM public.store"""
-        
-    cursor_pagila.execute(query, ('B001',))
-    conn_pagila.commit()
-        
-    return cursor_pagila.fetchall()
+    pass
 
 def extract_table_address(conn_pagila, cursor_pagila):
-    query = """
-    SELECT
-        address_id,
-        address,
-        %s,
-        CURRENT_TIMESTAMP
-    FROM public.address"""
-        
-    cursor_pagila.execute(query, ('B001',))
-    conn_pagila.commit()
-        
-    return cursor_pagila.fetchall()
-
-
+    pass
     
 # ======================= insert table staging =======================
 
@@ -327,281 +214,41 @@ def insert_data_customer(conn_po, cursor_po, data_customer):
             conn_po.commit()
 
 def insert_data_film(conn_po, cursor_po, data_film):
-    # check table film by batch_id before inserting the data
-    query_check = "SELECT * FROM staging.stg_film WHERE batch_id = %s"
-    cursor_po.execute(query_check, ('B001',))
-        
-    # if film data is not exist
-    if cursor_po.rowcount == 0:
-        # do iteration (loop) for each row data
-        for item in data_film:
-            query = """
-            INSERT INTO 
-                staging.stg_film (film_id,
-                title, rental_rate, batch_id, extract_time)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            """
-            cursor_po.execute(query, (
-                item['film_id'], item['title'], item['rental_rate'],
-                'B001', 'NOW()'
-            ))
-            conn_po.commit()
+    pass
             
 def insert_data_payment(conn_po, cursor_po, data_payment):
-    # check table payment by batch_id before inserting the data
-    query_check = "SELECT * FROM staging.stg_payment WHERE batch_id = %s"
-    cursor_po.execute(query_check, ('B001',))
-    
-    # if payment data is not exist
-    if cursor_po.rowcount == 0:
-        # do iteration (loop) for each row data
-        for item in data_payment:
-            query = """
-            INSERT INTO 
-                staging.stg_payment (payment_id, customer_id,
-                rental_id, amount, payment_date, batch_id, extract_time)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """
-            cursor_po.execute(query, (
-                item['payment_id'], item['customer_id'], item['rental_id'],
-                item['amount'], item['payment_date'], 'B001', 'NOW()'
-            ))
-            conn_po.commit()
+    pass
             
 def insert_data_rental (conn_po, cursor_po, data_rental):
-    # check table rental by batch_id before inserting the data
-    query_check = "SELECT * FROM staging.stg_rental WHERE batch_id = %s"
-    cursor_po.execute(query_check, ('B001',))
-    
-    # if rental data is not exist
-    if cursor_po.rowcount == 0:
-        # do iteration (loop) for each row data
-        for item in data_rental:
-            query = """
-            INSERT INTO 
-                staging.stg_rental (rental_id, inventory_id,
-                batch_id, extract_time)
-            VALUES (%s, %s, %s, %s)
-            """
-            cursor_po.execute(query, (
-                item['rental_id'], item['inventory_id'],
-                'B001', 'NOW()'
-            ))
-            conn_po.commit()
-            
+    pass
+        
 def insert_data_inventory (conn_po, cursor_po, data_inventory):
-    # check table inventory by batch_id before inserting the data
-    query_check = "SELECT * FROM staging.stg_inventory WHERE batch_id = %s"
-    cursor_po.execute(query_check, ('B001',))
-    
-    # if inventory data is not exist
-    if cursor_po.rowcount == 0:
-        # do iteration (loop) for each row data
-        for item in data_inventory:
-            query = """
-            INSERT INTO 
-                staging.stg_inventory (inventory_id, film_id,
-                store_id, batch_id, extract_time)
-            VALUES (%s, %s, %s, %s, %s)
-            """
-            cursor_po.execute(query, (
-                item['inventory_id'], item['film_id'], item['store_id'],
-                'B001', 'NOW()'
-            ))
-            conn_po.commit()
-            
+    pass
+        
 def insert_data_store (conn_po, cursor_po, data_store):
-    # check table store by batch_id before inserting the data
-    query_check = "SELECT * FROM staging.stg_store WHERE batch_id = %s"
-    cursor_po.execute(query_check, ('B001',))
-    
-    # if store data is not exist
-    if cursor_po.rowcount == 0:
-        # do iteration (loop) for each row data
-        for item in data_store:
-            query = """
-            INSERT INTO 
-                staging.stg_store (store_id, address_id,
-                batch_id, extract_time)
-            VALUES (%s, %s, %s, %s)
-            """
-            cursor_po.execute(query, (
-                item['store_id'], item['address_id'],
-                'B001', 'NOW()'
-            ))
-            conn_po.commit()
-            
+    pass
+        
 def insert_data_address (conn_po, cursor_po, data_address):
-    # check table address by batch_id before inserting the data
-    query_check = "SELECT * FROM staging.stg_address WHERE batch_id = %s"
-    cursor_po.execute(query_check, ('B001',))
-    
-    # if address data is not exist
-    if cursor_po.rowcount == 0:
-        # do iteration (loop) for each row data
-        for item in data_address:
-            query = """
-            INSERT INTO 
-                staging.stg_address (address_id, address,
-                batch_id, extract_time)
-            VALUES (%s, %s, %s, %s)
-            """
-            cursor_po.execute(query, (
-                item['address_id'], item['address'],
-                'B001', 'NOW()'
-            ))
-            conn_po.commit()
+    pass
 
 # ======================= transform data & load customer =======================
 
-#customer
 def transform_load_customer(conn_po, cursor_po):
-    query_drop = "DROP TABLE IF EXIST dw.dim_customer"
-    cursor_po.execute(query_drop)
-    conn_po.commit()
-    
-    query = """
-        INSERT INTO dw.dim_customer (
-        customer_id,
-        first_name,
-        last_name,
-        full_name,
-        email
-    )
-    SELECT
-        customer_id,
-        INITCAP(TRIM(first_name)) AS first_name,
-        INITCAP(TRIM(last_name)) AS last_name,
-        CONCAT_WS(
-            ' ',
-            INITCAP(TRIM(first_name)),
-            INITCAP(TRIM(last_name))
-        ),
-        LOWER(TRIM(email)) AS full_name
-    FROM staging.stg_customer
-    """
-    
-    cursor_po.execute(query)
-    conn_po.commit()
+    pass
     
 def transform_load_film(conn_po, cursor_po):
-    query_drop = "DROP TABLE IF EXIST dw.dim_film"
-    cursor_po.execute(query_drop)
-    conn_po.commit()
-    
-    query = """
-        INSERT INTO dw.dim_film (
-        film_id,
-        title,
-        rental_rate
-    )
-    SELECT
-        film_id,
-        TRIM(title),
-        rental_rate
-    FROM staging.stg_film;
-    """
-    
-    cursor_po.execute(query)
-    conn_po.commit()
-    
+    pass
     
 def transform_load_store(conn_po, cursor_po):
-    query_drop = "DROP TABLE IF EXIST dw.dim_store"
-    cursor_po.execute(query_drop)
-    conn_po.commit()
-    
-    query = """
-        INSERT INTO dw.dim_store (
-        store_id,
-        address_id
-    )
-    SELECT
-        s.store_id,
-        TRIM(a.address)
-    FROM staging.stg_store s
-    JOIN staging.stg_address a
-        ON s.address_id = a.address_id;
-    """
-    cursor_po.execute(query)
-    conn_po.commit()
+    pass
     
 def transform_load_date(conn_po, cursor_po):
-    query_drop = "DROP TABLE IF EXIST dw.dim_date"
-    cursor_po.execute(query_drop)
-    conn_po.commit()
-        
-    query = """
-        INSERT INTO dw.dim_date (
-        date_key,
-        full_date,
-        day,
-        month,
-        quarter,
-        year
-    )
-    SELECT DISTINCT
-        TO_CHAR(payment_date, 'YYYYMMDD')::INTEGER,
-        payment_date::DATE,
-        EXTRACT(DAY FROM payment_date)::INTEGER,
-        EXTRACT(MONTH FROM payment_date)::INTEGER,
-        EXTRACT(QUARTER FROM payment_date)::INTEGER,
-        EXTRACT(YEAR FROM payment_date)::INTEGER
-    FROM staging.stg_payment
-    WHERE payment_date IS NOT NULL;
-    """ 
-    
-    cursor_po.execute(query)
-    conn_po.commit()
-
-#payment
+    pass
 
 def transform_load_payment(conn_po, cursor_po):
-    query_drop = "DROP TABLE IF EXIST dw.fact_payment"
-    cursor_po.execute(query_drop)
-    conn_po.commit()
-    
-    query = """
-        INSERT INTO dw.fact_payment (
-                payment_id,
-                customer_key,
-                film_key,
-                store_key,
-                revenue_amount
-            )
-            SELECT
-            p.payment_id,
-            d.date_key,
-            c.customer_key,
-            f.film_key,
-            s.store_key,
-            p.amount
-        FROM staging.stg_payment p
-        JOIN staging.stg_rental r
-            ON p.rental_id = r.rental_id
-        JOIN staging.stg_inventory i
-            ON r.inventory_id = i.inventory_id
-        JOIN dw.dim_date d
-            ON p.payment_date::DATE = d.full_date
-        JOIN dw.dim_customer c
-            ON p.customer_id = c.customer_id
-        JOIN dw.dim_film f
-            ON i.film_id = f.film_id
-        JOIN dw.dim_store s
-            ON i.store_id = s.store_id;
-    """
-    
-    cursor_po.execute(query)
-    conn_po.commit()
+    pass
 
     
-    
-    
-
-    
-    
-
-
 if __name__ == '__main__':
     # 1. run 'python.exe (atau py.exe) etl.py
     # 2. pastikan bahwa tabel telah di insert / table dibuat
